@@ -571,5 +571,5 @@ with open('result.csv', 'w', encoding='utf-8', newline='') as csvfile:
 	writer.writerow(cc)
 
 plt.tight_layout()
-#plt.savefig('img/fig1.jpg')
+plt.savefig('img/fig1.jpg')
 plt.show()
