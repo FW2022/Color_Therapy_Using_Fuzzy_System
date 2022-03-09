@@ -1,11 +1,19 @@
+# -*- coding: utf-8 -*-
+
 import skfuzzy as fuzz
 import numpy as np
 import cv2
 import csv
 from sklearn.cluster import KMeans
+import sys
+
+# 실행예시 : python fuzzy.py img/BG.jpeg result1.csv
+# 첫번째 인자
+print(f"첫번째 인자 : {sys.argv[1]}")
+print(f"두번째 인자 : {sys.argv[2]}")
 
 # 사용자 그림 이미지
-image = cv2.imread("img/img3.jpg")
+image = cv2.imread(sys.argv[1])
 
 # 채널을 BGR -> RGB로 변경
 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -15,7 +23,7 @@ image = image.reshape((image.shape[0] * image.shape[1], 3))
 
 # k-mean 알고리즘으로 이미지를 학습시킨다.
 k = 5
-clt = KMeans(n_clusters = k)
+clt = KMeans(n_clusters=k)
 clt.fit(image)
 
 print("******실제 clustering된 컬러값(주조색, 보조색 RGB값)******")
@@ -24,10 +32,13 @@ for center in clt.cluster_centers_:
     print(center)
 
 # 주조색 RGB값
-r1, g1, b1 = clt.cluster_centers_[0][0], clt.cluster_centers_[0][1], clt.cluster_centers_[0][2]
+r1, g1, b1 = clt.cluster_centers_[0][0], clt.cluster_centers_[
+    0][1], clt.cluster_centers_[0][2]
 
 # 보조색 RGB값
-r2, g2, b2 = clt.cluster_centers_[1][0], clt.cluster_centers_[1][1], clt.cluster_centers_[1][2]
+r2, g2, b2 = clt.cluster_centers_[1][0], clt.cluster_centers_[
+    1][1], clt.cluster_centers_[1][2]
+
 
 # RGB 픽셀값 -> HSV 값으로 변환
 def rgb_to_hsv(r, g, b):
@@ -63,6 +74,7 @@ def rgb_to_hsv(r, g, b):
     # V(Value: 명도) 계산
     v_value = cmax * 100
     return [h_value, s_value, v_value]
+
 
 arr1 = rgb_to_hsv(r1, g1, b1)
 arr2 = rgb_to_hsv(r2, g2, b2)
@@ -108,6 +120,7 @@ GREEN = fuzz.trapmf(pc, [65, 70, 80, 82])
 BLUE = fuzz.trapmf(pc, [80, 82, 90, 93])
 PURPLE = fuzz.trapmf(pc, [90, 93, 100, 100])
 
+
 ##################### 퍼지화하는 멤버십 함수 #####################
 def hMemfunc(h_val):
     red_val = fuzz.interp_membership(h, R1, h_val)
@@ -118,18 +131,22 @@ def hMemfunc(h_val):
     ppl_val = fuzz.interp_membership(h, P1, h_val)
     red_val2 = fuzz.interp_membership(h, R1_1, h_val)
     return red_val, org_val, ylw_val, grn_val, blu_val, ppl_val, red_val2, \
-           dict(red=red_val, orange=org_val, yellow=ylw_val, green=grn_val, blue=blu_val, purple=ppl_val, red2=red_val2)
+        dict(red=red_val, orange=org_val, yellow=ylw_val,
+             green=grn_val, blue=blu_val, purple=ppl_val, red2=red_val2)
+
 
 def sMemfunc(s_val):
     lowS_val = fuzz.interp_membership(s, LS, s_val)
     highS_val = fuzz.interp_membership(s, HS, s_val)
     return lowS_val, highS_val, dict(low_S=lowS_val, high_S=highS_val)
 
+
 def vMemfunc(v_val):
     lowV_val = fuzz.interp_membership(v, LV, v_val)
     midV_val = fuzz.interp_membership(v, MV, v_val)
     highV_val = fuzz.interp_membership(v, HV, v_val)
     return lowV_val, midV_val, highV_val, dict(low_V=lowV_val, mid_V=midV_val, high_V=highV_val)
+
 
 # 주조색 멤버십 함수 대응값
 print("******주조색 HSV 멤버십 함수 소속값******")
@@ -191,7 +208,8 @@ PC1_rule8_1 = min(hP1, sH, vM)  # 규칙 8: 계산용
 gr1_rule8_1 = np.fmin(PC1_rule8_1, PURPLE)  # 규칙 8: 그래프용
 
 # 규칙 후건의 통합 : 그래프용
-aggregated1 = np.fmax(gr1_rule1, np.fmax(gr1_rule2, np.fmax(gr1_rule3, np.fmax(gr1_rule3_1, np.fmax(gr1_rule4, np.fmax(gr1_rule5, np.fmax(gr1_rule6, np.fmax(gr1_rule6_1,np.fmax(gr1_rule7, np.fmax(gr1_rule7_1, np.fmax(gr1_rule8, gr1_rule8_1)))))))))))
+aggregated1 = np.fmax(gr1_rule1, np.fmax(gr1_rule2, np.fmax(gr1_rule3, np.fmax(gr1_rule3_1, np.fmax(gr1_rule4, np.fmax(
+    gr1_rule5, np.fmax(gr1_rule6, np.fmax(gr1_rule6_1, np.fmax(gr1_rule7, np.fmax(gr1_rule7_1, np.fmax(gr1_rule8, gr1_rule8_1)))))))))))
 
 pc1 = fuzz.defuzz(pc, aggregated1, 'centroid')
 
@@ -235,14 +253,16 @@ gr2_rule7_1 = np.fmin(PC1_rule7_1, BLUE)
 gr2_rule8 = np.fmin(DC1_rule8, PURPLE)
 gr2_rule8_1 = np.fmin(PC1_rule8_1, PURPLE)
 
-aggregated2 = np.fmax(gr2_rule1, np.fmax(gr2_rule2, np.fmax(gr2_rule3, np.fmax(gr2_rule3_1, np.fmax(gr2_rule4, np.fmax(gr2_rule5, np.fmax(gr2_rule6, np.fmax(gr2_rule6_1, np.fmax(gr2_rule7,  np.fmax(gr2_rule7_1, np.fmax(gr2_rule8, gr2_rule8_1)))))))))))
+aggregated2 = np.fmax(gr2_rule1, np.fmax(gr2_rule2, np.fmax(gr2_rule3, np.fmax(gr2_rule3_1, np.fmax(gr2_rule4, np.fmax(
+    gr2_rule5, np.fmax(gr2_rule6, np.fmax(gr2_rule6_1, np.fmax(gr2_rule7,  np.fmax(gr2_rule7_1, np.fmax(gr2_rule8, gr2_rule8_1)))))))))))
 
 dc1 = fuzz.defuzz(dc, aggregated2, 'centroid')
-#dc1 = (DC1_rule1 + (10 + 20) * DC1_rule2 + 30 * DC1_rule3 + (40 + 50) * DC1_rule4 + 60 * DC1_rule5 + (70 + 80) * DC1_rule6 + 90 * DC1_rule7 + 100 * DC1_rule8) \
+# dc1 = (DC1_rule1 + (10 + 20) * DC1_rule2 + 30 * DC1_rule3 + (40 + 50) * DC1_rule4 + 60 * DC1_rule5 + (70 + 80) * DC1_rule6 + 90 * DC1_rule7 + 100 * DC1_rule8) \
 #     / ((DC1_rule1 * 2) + DC1_rule2 + DC1_rule3 + (DC1_rule4 * 2) + DC1_rule5 + (DC1_rule6 * 2) + DC1_rule7 + DC1_rule8)
 
 print("******보조색 역퍼지화값******")
 print(f"보조색 역퍼지화 값: {dc1}\n")
+
 
 # 주조색-보조색 => 보완색
 def rstColor(c1, c2):
@@ -465,12 +485,13 @@ def rstColor(c1, c2):
 
     return cc
 
+
 cc = rstColor(pc1, dc1)
 print("******주조색과 보조색에 따른 보완색******")
 print(f"주조색: {cc[0]}, 보조색: {cc[1]}, 보완색: {cc[2]}")
 
 # csv 쓰기
-with open('result.csv', 'w', encoding='utf-8', newline='') as csvfile:
-	writer = csv.writer(csvfile)
-	writer.writerow(["주조색", "보조색", "보완색"])
-	writer.writerow(cc)
+with open(sys.argv[2], 'w', encoding='utf-8', newline='') as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(["주조색", "보조색", "보완색"])
+    writer.writerow(cc)
