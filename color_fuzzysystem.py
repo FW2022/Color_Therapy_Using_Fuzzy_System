@@ -29,7 +29,7 @@ r1, g1, b1 = clt.cluster_centers_[0][0], clt.cluster_centers_[0][1], clt.cluster
 # 보조색 RGB값
 r2, g2, b2 = clt.cluster_centers_[1][0], clt.cluster_centers_[1][1], clt.cluster_centers_[1][2]
 
-# 보조색2 RGB값
+# 보조색 RGB값 (추가)
 r3, g3, b3 = clt.cluster_centers_[2][0], clt.cluster_centers_[2][1], clt.cluster_centers_[2][2]
 r4, g4, b4 = clt.cluster_centers_[3][0], clt.cluster_centers_[3][1], clt.cluster_centers_[3][2]
 
