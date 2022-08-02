@@ -60,18 +60,6 @@
         </sub>
     </a>
 </td>
-      <td align="center">
-    <a href="https://github.com/Junst">
-        <img src="https://avatars.githubusercontent.com/u/30133053?v=4" width="150px;" alt=""/>
-        <br />
-        <sub>
-            <b>< 고준영 ></b>
-            <br />
-            음악 분류 모델 개발 <br />
-            미니어처 분류 모델 개발
-        </sub>
-    </a>
-</td>
     <td align="center">
         <a href="https://github.com/omizha">
             <img src="https://avatars.githubusercontent.com/u/4525704?v=4?s=100" width="150px;" alt=""/>
@@ -84,4 +72,16 @@
             </sub>
         </a>
     </td>
+              <td align="center">
+    <a href="https://github.com/Junst">
+        <img src="https://avatars.githubusercontent.com/u/30133053?v=4" width="150px;" alt=""/>
+        <br />
+        <sub>
+            <b>< 고준영 ></b>
+            <br />
+            음악 분류 모델 개발 <br />
+            미니어처 분류 모델 개발
+        </sub>
+    </a>
+</td>
 </table>
